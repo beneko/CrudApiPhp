@@ -18,4 +18,25 @@ class Product {
     public function __construct($db) {
         $this->conn = $db;
     }
+
+    // lecture des produits
+    public function read() {
+        // requête select avec jointure
+        $query = "SELECT
+            c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
+            FROM "
+            . $this->table_name . " p
+            LEFT JOIN
+            categories c ON p.category_id = c.id
+            ORDER BY
+            p.created DESC";
+
+        // on prépare la requête
+        $stmt = $this->conn->prepare($query);
+
+        // on execute la requête
+        $stmt->execute();
+
+        return $stmt;
+    }
 }
