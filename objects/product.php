@@ -69,4 +69,34 @@ class Product {
         }
         return false;
     }
+
+    public function readOne() {
+        // requête pour lire 1 enregistrement
+        $query = "SELECT
+      c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
+      FROM
+         " . $this->table_name . " p
+      LEFT JOIN
+         categories c
+      ON p.category_id = c.id
+      WHERE
+         p.id = ?
+      LIMIT
+         0,1";
+        // on prépare la requête
+        $stmt = $this->conn->prepare($query);
+        // on met l'id à sa place
+        $stmt->bindParam(1, $this->id);
+        // on execute
+        $stmt->execute();
+        // on récupère le résultat
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // on renvoie ça dans l'objet
+        $this->name = $row['name'];
+        $this->price = $row['price'];
+        $this->description = $row['description'];
+        $this->category_id = $row['category_id'];
+        $this->category_name = $row['category_name'];
+    }
 }
