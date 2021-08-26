@@ -25,14 +25,16 @@ if($num>0){
     $products_arr = array();
     $products_arr["records"]=array();
 
-    // on récupère le contenu de la table
+        // on récupère le contenu de la table
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
+
 
         $product_item = array(
             "id" => $id,
             "name" => $name,
-            "description" => $price,
+            "description" => $description,
+            "price" => $price,
             "category_id" => $category_id,
             "category_name" => $category_name
         );
@@ -46,4 +48,12 @@ if($num>0){
     // on renvoie la réponse en Json
     echo json_encode($products_arr);
 
-}
+    }
+    else
+    {
+        // on renvoie le code 404 Not found
+        http_response_code(404);
+
+        // On averti l'utilisateur
+        echo json_encode(array("message"=> "Aucun produits trouvés."));
+    }
